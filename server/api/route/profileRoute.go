@@ -17,5 +17,5 @@ func NewProfileRouter(env *bootstrap.Env, timeout time.Duration, dbPool *pgxpool
 		ProfileUsecase: usecase.NewProfileUsecase(userRepo, timeout),
 	}
 
-	group.GET("/profile", profileController.Fetch)
+	group.GET("/profile", profileController.FetchByID)
 }

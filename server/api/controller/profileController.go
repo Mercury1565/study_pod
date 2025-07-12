@@ -11,7 +11,7 @@ type ProfileController struct {
 	ProfileUsecase domain.ProfileUsecase
 }
 
-func (profileController *ProfileController) Fetch(c *gin.Context) {
+func (profileController *ProfileController) FetchByID(c *gin.Context) {
 	userId := c.GetString("x-user-id")
 
 	profile, err := profileController.ProfileUsecase.GetProfileByID(c, userId)

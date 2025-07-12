@@ -18,5 +18,5 @@ func NewBookRouter(env *bootstrap.Env, timeout time.Duration, dbPool *pgxpool.Po
 	}
 
 	group.POST("/book", BookController.Create)
-	group.GET("/book", BookController.Fetch)
+	group.GET("/book/:id", BookController.FetchByID)
 }

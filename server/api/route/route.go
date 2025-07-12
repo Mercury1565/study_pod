@@ -24,4 +24,7 @@ func Setup(env *bootstrap.Env, timeout time.Duration, dbPool *pgxpool.Pool, gin 
 		// All private APIs
 		NewProfileRouter(env, timeout, dbPool, protectedRouter)
 		NewBookRouter(env, timeout, dbPool, protectedRouter)
+		NewChapterRouter(env, timeout, dbPool, protectedRouter)
+		NewPodcastRouter(env, timeout, dbPool, protectedRouter)
+		NewInstanceRouter(env, timeout, dbPool, protectedRouter)
 }

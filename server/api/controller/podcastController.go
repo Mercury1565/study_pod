@@ -8,40 +8,40 @@ import (
 	"github.com/google/uuid"
 )
 
-type BookController struct {
-	BookUseCase domain.BookUseCase
+type PodcastController struct {
+	PodcastUseCase domain.PodcastUseCase
 }
 
-func (tc *BookController) Create(c *gin.Context) {
-	var newBook domain.Book
+func (tc *PodcastController) Create(c *gin.Context) {
+	var newPodcast domain.Podcast
 
-	err := c.ShouldBind(&newBook)
+	err := c.ShouldBind(&newPodcast)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	newBook.ID = uuid.New().String()
+	newPodcast.ID = uuid.New().String()
 
-	err = tc.BookUseCase.Create(c, &newBook)
+	err = tc.PodcastUseCase.Create(c, &newPodcast)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, domain.SuccessResponse{
-		Message: "Book created successfully",
+		Message: "Podcast created successfully",
 	})
 }
 
-func (tc *BookController) FetchByID(c *gin.Context) {
+func (tc *PodcastController) FetchByID(c *gin.Context) {
 	id := c.Param("id")
 
-	book, err := tc.BookUseCase.FetchByID(c, id)
+	podcast, err := tc.PodcastUseCase.FetchByID(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, book)
+	c.JSON(http.StatusOK, podcast)
 }
