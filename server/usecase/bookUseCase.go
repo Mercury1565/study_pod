@@ -25,9 +25,9 @@ func (bookUC *BookUsecase) Create(c context.Context, book *domain.Book) error {
 	return bookUC.BookRepository.Create(ctx, book)
 }
 
-func (bookUC *BookUsecase) FetchByUserID(c context.Context, bookID string) ([]domain.Book, error) {
+func (bookUC *BookUsecase) FetchByID(c context.Context, bookID string) (*domain.Book, error) {
 	ctx, cancel := context.WithTimeout(c, bookUC.contextTimeout)
 	defer cancel()
 
-	return bookUC.BookRepository.FetchByUserID(ctx, bookID)
+	return bookUC.BookRepository.FetchByID(ctx, bookID)
 }
