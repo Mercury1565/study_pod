@@ -49,30 +49,3 @@ func NewPostgresPool(env *Env) *pgxpool.Pool {
 	fmt.Println("Connected to PostgreSQL")
 	return pool
 }
-
-// initializeSchema creates the necessary tables if they don't exist
-func initializeSchema(ctx context.Context, pool *pgxpool.Pool) error {
-	queries := []string{
-		`CREATE TABLE IF NOT EXISTS users (
-			id VARCHAR(255) PRIMARY KEY,
-			name VARCHAR(255),
-			email VARCHAR(255) UNIQUE,
-			password VARCHAR(255)
-		)`,
-		`CREATE TABLE IF NOT EXISTS books (
-			id VARCHAR(255) PRIMARY KEY,
-			user_id VARCHAR(255) REFERENCES users(id),
-			title VARCHAR(255),
-			url VARCHAR(255)
-		)`,
-	}
-
-	for _, query := range queries {
-		_, err := pool.Exec(ctx, query)
-		if err != nil {
-			return fmt.Errorf("failed to execute query: %v, error: %w", query, err)
-		}
-	}
-
-	return nil
-}
