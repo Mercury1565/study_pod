@@ -3,6 +3,7 @@ package repository
 import (
 	"Clean_Architecture/domain"
 	"context"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -17,39 +18,23 @@ func NewBookRepo(dbPool *pgxpool.Pool) domain.BookRepository {
 }
 
 func (tr *BookRepo) Create(c context.Context, book *domain.Book) error {
-	query := `INSERT INTO books (id, user_id, title, url)
+	query := `INSERT INTO books (id, title, url)
               VALUES ($1, $2, $3, $4)`
-	_, err := tr.db.Exec(c, query, book.ID, book.UserID, book.Title, book.Url)
+	_, err := tr.db.Exec(c, query, book.ID, book.Title, book.Url)
 	return err
 }
 
-func (tr *BookRepo) FetchByUserID(c context.Context, userID string) ([]domain.Book, error) {
-	query := `SELECT id, user_id, title, url
-              FROM books
-              WHERE user_id = $1`
-	rows, err := tr.db.Query(c, query, userID)
+func (tr *BookRepo) FetchByID(c context.Context, id string) (*domain.Book, error) {
+	query := `SELECT id, title, url
+			  FROM books
+			  WHERE id = $1`
+	row := tr.db.QueryRow(c, query, id)
+
+	var book domain.Book
+	err := row.Scan(&book.ID, &book.Title, &book.Url)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	var books []domain.Book
-	for rows.Next() {
-		var book domain.Book
-		err := rows.Scan(&book.ID, &book.UserID, &book.Title, &book.Url)
-		if err != nil {
-			return nil, err
-		}
-		books = append(books, book)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	if len(books) == 0 {
-		return []domain.Book{}, nil
-	}
-
-	return books, nil
+	return &book, nil
 }
